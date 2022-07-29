@@ -12,9 +12,7 @@ app.use(express.json({ extended: true }));
 app.use("/auth", require("./routes/auth"));
 app.use("/profile", require("./routes/profile"));
 app.use("/posts", require("./routes/posts"));
-app.get("/", require("./middlewares/jwtAuthorization"), (req, res) => {
-  res.send({ msg: "Hello, You are authorized!!", user: req.payload });
-});
+
 function start() {
   try {
     mongoose.connect(process.env.REMOTE_MONGO_URI).then(() => {

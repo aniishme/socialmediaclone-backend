@@ -81,9 +81,9 @@ router.post(
 
           user
             .save()
-            .then(() => {
+            .then(async () => {
               const userInfo = new UserInfo({
-                userId: user.id,
+                userId: await user.id,
               });
               userInfo.save().then(() => {
                 return res.status(200).json({
