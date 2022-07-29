@@ -17,7 +17,7 @@ app.get("/", require("./middlewares/jwtAuthorization"), (req, res) => {
 });
 function start() {
   try {
-    mongoose.connect(process.env.MONGODB_URI).then(() => {
+    mongoose.connect(process.env.REMOTE_MONGO_URI).then(() => {
       console.log("connected to database");
       app.listen(process.env.PORT, () => {
         console.log("Server started at https://localhost:8000");

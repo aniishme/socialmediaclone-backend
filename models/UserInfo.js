@@ -3,19 +3,21 @@ const mongoose = require("mongoose");
 const UserInfoSchema = new mongoose.Schema({
   address: {
     type: String,
-    required: true,
   },
   gender: {
     type: String,
-    required: true,
   },
   bio: {
     type: String,
-    required: true,
   },
+  followers: [String],
+  following: [String],
   userId: {
     type: String,
-    required: true,
+  },
+  date_created: {
+    type: Date,
+    default: Date.now,
   },
 });
 

@@ -11,6 +11,7 @@ const {
   signRefereshToken,
   verifyRefereshToken,
 } = require("../../helpers/jwt_helper");
+const UserInfo = require("../../models/UserInfo");
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
@@ -77,12 +78,18 @@ router.post(
             email,
             password: hashedPassword,
           });
+
           user
             .save()
             .then(() => {
-              return res.status(200).json({
-                status: "success",
-                message: "User created successfully",
+              const userInfo = new UserInfo({
+                userId: user.id,
+              });
+              userInfo.save().then(() => {
+                return res.status(200).json({
+                  status: "success",
+                  message: "User created successfully",
+                });
               });
             })
             .catch((err) => console.log(err));

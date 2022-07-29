@@ -7,7 +7,7 @@ router.post(
   "/create-post",
   require("../../middlewares/jwtAuthorization"),
   async (req, res) => {
-    const { content, userId } = await req.body;
+    const { content, userId, username } = await req.body;
     await User.findOne({ id: userId }).then((user) => {
       if (!user) {
         return res
@@ -18,6 +18,7 @@ router.post(
       const newPost = new Post({
         content,
         userId,
+        username,
       });
       newPost
         .save()
@@ -39,7 +40,6 @@ router.get(
   "/",
   require("../../middlewares/jwtAuthorization"),
   async (req, res) => {
-    console.log(req.payload);
     await Post.find({}).then((post) => {
       return res.json(post);
     });

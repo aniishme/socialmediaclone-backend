@@ -2,12 +2,54 @@ const express = require("express");
 const router = express.Router();
 const User = require("../../models/User");
 const UserInfo = require("../../models/UserInfo");
+const Post = require("../../models/Post");
 
 router.get(
   "/:userId",
-  require("../../middlewares/jwtAuthorization"),
-  (req, res) => {
-    res.send(req.params.userId);
+
+  async (req, res) => {
+    const { userId } = req.params;
+
+    let userView = {};
+
+    User.findOne({ _id: userId })
+      .then((user) => {
+        if (!user) {
+          return res
+            .status(400)
+            .json({ status: "failed", message: "DoesnotExist" });
+        }
+        userView = { ...userView, id: user._id, name: user.fullname };
+        UserInfo.findOne({ userId: userId }).then((userInf) => {
+          if (!userInf) {
+            return res
+              .status(400)
+              .json({ status: "failed", message: "Not Found" });
+          }
+
+          userView = {
+            ...userView,
+            info: {
+              address: userInf.address,
+              gender: userInf.gender,
+              bio: userInf.bio,
+              followers: userInf.followers,
+              following: userInf.following,
+            },
+          };
+          Post.find({ userId: userId }).then((post) => {
+            if (!userInf) {
+              return res.json({ userView });
+            }
+
+            userView = { ...userView, post };
+            return res.json(userView);
+          });
+        });
+      })
+      .catch((err) => {
+        res.status(400).json({ err });
+      });
   }
 );
 
